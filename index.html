@@ -78,7 +78,10 @@
                         <div class="task-actions">
                             <button class="btn btn-info btn-sm" onclick="viewDetails(${index})">View Details</button>
                             <button class="btn btn-warning btn-sm" onclick="editTask(${index})">Edit</button>
-                            <button class="btn btn-success btn-sm" onclick="markCompleted(${index})">Complete</button>
+                            ${task.completed ? 
+                                `<button class="btn btn-secondary btn-sm" onclick="undoTask(${index})">Undo</button>` : 
+                                `<button class="btn btn-success btn-sm" onclick="markCompleted(${index})">Complete</button>`
+                            }
                             <button class="btn btn-danger btn-sm" onclick="deleteTask(${index})">Delete</button>
                         </div>
                     </div>
@@ -109,10 +112,21 @@
         }
 
         function markCompleted(index) {
-            tasks[index].completed = true;
-            tasks[index].completedDate = new Date().toLocaleDateString();
-            saveTasks();
-            renderTasks();
+            if (confirm('Are you sure you want to mark this task as completed?')) {
+                tasks[index].completed = true;
+                tasks[index].completedDate = new Date().toLocaleDateString();
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function undoTask(index) {
+            if (confirm('Are you sure you want to undo this task completion?')) {
+                tasks[index].completed = false;
+                tasks[index].completedDate = '';
+                saveTasks();
+                renderTasks();
+            }
         }
 
         function deleteTask(index) {
