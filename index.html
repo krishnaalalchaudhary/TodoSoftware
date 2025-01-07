@@ -34,6 +34,7 @@
                     <input type="text" id="taskInput" class="form-control" placeholder="Enter your task">
                     <button class="btn btn-primary" id="addTaskBtn">Add Task</button>
                 </div>
+                <button class="btn btn-danger mt-3" id="deleteAllBtn">Delete All Tasks</button>
             </div>
         </div>
 
@@ -48,6 +49,7 @@
         const taskList = document.getElementById('taskList');
         const taskInput = document.getElementById('taskInput');
         const addTaskBtn = document.getElementById('addTaskBtn');
+        const deleteAllBtn = document.getElementById('deleteAllBtn');
 
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
@@ -69,6 +71,7 @@
                             ${task.completed ? `<p>Completed On: ${task.completedDate}</p>` : ''}
                         </div>
                         <div class="task-actions">
+                            <button class="btn btn-info btn-sm" onclick="viewDetails(${index})">View Details</button>
                             <button class="btn btn-success btn-sm" onclick="markCompleted(${index})">Complete</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteTask(${index})">Delete</button>
                         </div>
@@ -112,6 +115,19 @@
             renderTasks();
         }
 
+        function deleteAllTasks() {
+            if (confirm('Are you sure you want to delete all tasks?')) {
+                tasks = [];
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function viewDetails(index) {
+            const task = tasks[index];
+            alert(`Task: ${task.name}\nDate Added: ${task.dateAdded}\nCompleted: ${task.completed ? 'Yes' : 'No'}${task.completed ? `\nCompleted On: ${task.completedDate}` : ''}`);
+        }
+
         addTaskBtn.addEventListener('click', addTask);
 
         taskInput.addEventListener('keypress', (e) => {
@@ -119,6 +135,8 @@
                 addTask();
             }
         });
+
+        deleteAllBtn.addEventListener('click', deleteAllTasks);
 
         // Initial render
         renderTasks();
